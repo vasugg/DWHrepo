@@ -113,7 +113,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "ds_ecdc_raw_csv_json",
+									"referenceName": "ds_ecdc_sink_csv_using_json",
 									"type": "DatasetReference",
 									"parameters": {
 										"sinkFileName": {
