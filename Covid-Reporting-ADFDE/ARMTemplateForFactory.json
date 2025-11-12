@@ -71,7 +71,7 @@
 								}
 							},
 							"dataset": {
-								"referenceName": "ds_ecdc_raw_file_list",
+								"referenceName": "ds_ecdc_source_json_list",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -158,7 +158,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "ds_ecdc_raw_csv_json",
+											"referenceName": "ds_ecdc_sink_csv_using_json",
 											"type": "DatasetReference",
 											"parameters": {
 												"sinkFileName": {
@@ -179,9 +179,9 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_ecdc_raw_file_list')]",
+				"[concat(variables('factoryId'), '/datasets/ds_ecdc_source_json_list')]",
 				"[concat(variables('factoryId'), '/datasets/ds_ecdc_raw_csv_http')]",
-				"[concat(variables('factoryId'), '/datasets/ds_ecdc_raw_csv_json')]"
+				"[concat(variables('factoryId'), '/datasets/ds_ecdc_sink_csv_using_json')]"
 			]
 		},
 		{
@@ -540,8 +540,8 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "country_lookup.csv",
-						"folderPath": "ecdc",
-						"fileSystem": "raw"
+						"folderPath": "dim_country",
+						"fileSystem": "lookup"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
@@ -590,8 +590,8 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "dim_date.csv",
-						"folderPath": "lookup",
-						"fileSystem": "raw"
+						"folderPath": "dim_date",
+						"fileSystem": "lookup"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
@@ -729,7 +729,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_ecdc_raw_csv_json')]",
+			"name": "[concat(parameters('factoryName'), '/ds_ecdc_sink_csv_using_json')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -803,7 +803,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_ecdc_raw_file_list')]",
+			"name": "[concat(parameters('factoryName'), '/ds_ecdc_source_json_list')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -957,7 +957,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "hospital_admissions.csv",
-						"folderPath": "ecdc",
+						"folderPath": "ecdc/hospital_admissions",
 						"fileSystem": "raw"
 					},
 					"columnDelimiter": ",",
