@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "Covid-Reporting-ADFDE"
+		},
+		"ls_ablob_covidreportingsa_connectionString": {
+			"value": ""
+		},
+		"ls_adls_covidreportingdl_accountKey": {
+			"value": ""
+		},
+		"ls_adls_covidreportingdl_properties_typeProperties_url": {
+			"value": "https://covidreportingdljp1.dfs.core.windows.net/"
+		},
+		"ls_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
+			"value": "https://github.com"
+		},
+		"tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sourceRelativeURL": {
+			"value": "cloudboxacademy/covid19/raw/main/ecdc_data/hospital_admissions.csv"
+		},
+		"tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sinkFileName": {
+			"value": "hospital_admissions.csv"
+		},
+		"tr_ingest_population_data_properties_typeProperties_scope": {
+			"value": "/subscriptions/ea80ec92-189f-42c2-958f-d7071cc54c04/resourceGroups/AZDE1_CovidReporting/providers/Microsoft.Storage/storageAccounts/covidreportingsajp1"
+		}
+	}
+}
