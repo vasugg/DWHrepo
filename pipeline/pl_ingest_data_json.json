@@ -27,7 +27,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "ds_ecdc_raw_file_list",
+						"referenceName": "ds_ecdc_source_json_list",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
