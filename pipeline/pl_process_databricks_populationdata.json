@@ -1,0 +1,28 @@
+{
+	"name": "pl_process_databricks_populationdata",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Population Transformation",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/covid-reporting/transformation/transform_population_data"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_databricks_covid_reporting",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
