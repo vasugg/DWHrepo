@@ -11,6 +11,9 @@
 		"ls_adls_covidreportingdl_accountKey": {
 			"value": ""
 		},
+		"ls_databricks_covid_reporting_accessToken": {
+			"value": ""
+		},
 		"ls_adls_covidreportingdl_properties_typeProperties_url": {
 			"value": "https://covidreportingdljp1.dfs.core.windows.net/"
 		},

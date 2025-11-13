@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_adls_covidreportingdl'"
 		},
+		"ls_databricks_covid_reporting_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'ls_databricks_covid_reporting'"
+		},
 		"ls_adls_covidreportingdl_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://covidreportingdljp1.dfs.core.windows.net/"
@@ -22,14 +26,6 @@
 		"ls_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://github.com"
-		},
-		"tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sourceRelativeURL": {
-			"type": "string",
-			"defaultValue": "cloudboxacademy/covid19/raw/main/ecdc_data/hospital_admissions.csv"
-		},
-		"tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sinkFileName": {
-			"type": "string",
-			"defaultValue": "hospital_admissions.csv"
 		}
 	},
 	"variables": {
@@ -67,6 +63,31 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ls_databricks_covid_reporting')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-10822827780971.11.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('ls_databricks_covid_reporting_accessToken')]"
+					},
+					"newClusterNodeType": "Standard_DS3_v2",
+					"newClusterNumOfWorker": "1",
+					"newClusterSparkEnvVars": {
+						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+					},
+					"newClusterVersion": "10.4.x-scala2.12",
+					"clusterOption": "Fixed",
+					"newClusterInitScripts": []
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ls_http_opendata_ecdc_europa_eu')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -80,6 +101,42 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_process_databricks_populationdata')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Population Transformation",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/covid-reporting/transformation/transform_population_data"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_databricks_covid_reporting",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_databricks_covid_reporting')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ds_country_lookup')]",
@@ -1228,90 +1285,6 @@
 				"[concat(variables('factoryId'), '/datasets/ds_dim_date_lookup')]",
 				"[concat(variables('factoryId'), '/datasets/ds_processed_hopital_admissions_weekly')]",
 				"[concat(variables('factoryId'), '/datasets/ds_processed_hopital_admissions_daily')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_process_admissions_hospital_data')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "df_transform_hospital_admissions",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_transform_hospital_admissions",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"HospitalAdmissionsSource": {},
-									"CountrySource": {},
-									"DimDateSource": {},
-									"WeeklySink": {},
-									"DailySink": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2025-11-11T13:34:48Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/df_transform_hospital_admissions')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/tr_ingest_hospital_admissions_data')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "This is the trigger for ingesting the hospital admissions data to the Data Lake",
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "pl_insgest_ecdc_data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceRelativeURL": "[parameters('tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sourceRelativeURL')]",
-							"sinkFileName": "[parameters('tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sinkFileName')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2025-11-06T13:38:00",
-						"timeZone": "Tokyo Standard Time"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pl_insgest_ecdc_data')]"
 			]
 		}
 	]

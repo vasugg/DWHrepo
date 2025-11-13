@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_adls_covidreportingdl'"
 		},
+		"ls_databricks_covid_reporting_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'ls_databricks_covid_reporting'"
+		},
 		"ls_adls_covidreportingdl_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://covidreportingdljp1.dfs.core.windows.net/"
@@ -68,17 +72,14 @@
 					"ls_adls_covidreportingdl_accountKey": {
 						"value": "[parameters('ls_adls_covidreportingdl_accountKey')]"
 					},
+					"ls_databricks_covid_reporting_accessToken": {
+						"value": "[parameters('ls_databricks_covid_reporting_accessToken')]"
+					},
 					"ls_adls_covidreportingdl_properties_typeProperties_url": {
 						"value": "[parameters('ls_adls_covidreportingdl_properties_typeProperties_url')]"
 					},
 					"ls_http_opendata_ecdc_europa_eu_properties_typeProperties_url": {
 						"value": "[parameters('ls_http_opendata_ecdc_europa_eu_properties_typeProperties_url')]"
-					},
-					"tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sourceRelativeURL": {
-						"value": "[parameters('tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sourceRelativeURL')]"
-					},
-					"tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sinkFileName": {
-						"value": "[parameters('tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sinkFileName')]"
 					}
 				}
 			},
@@ -97,6 +98,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sourceRelativeURL": {
+						"value": "[parameters('tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sourceRelativeURL')]"
+					},
+					"tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sinkFileName": {
+						"value": "[parameters('tr_ingest_hospital_admissions_data_properties_pl_insgest_ecdc_data_parameters_sinkFileName')]"
 					},
 					"tr_ingest_population_data_properties_typeProperties_scope": {
 						"value": "[parameters('tr_ingest_population_data_properties_typeProperties_scope')]"
